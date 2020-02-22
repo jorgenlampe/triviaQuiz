@@ -1,15 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.preference.PreferenceScreen
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <PreferenceCategory android:title="Innstillinger" >
+    <PreferenceCategory android:title="Number of questions" >
 
-       <MultiSelectListPreference>
+        <EditTextPreference
+            app:key="amount"
+            app:title="Number of questions"/>
 
 
 
-       </MultiSelectListPreference>
-        
     </PreferenceCategory>
+
+    <PreferenceCategory android:title="Difficulty">
+
+        <CheckBoxPreference
+
+        app:title="Any difficulty"
+            app:key="diffAny"
+            app:defaultValue="true">
+
+        </CheckBoxPreference>
+        <CheckBoxPreference
+            app:title="Easy"
+            app:key="diffEasy"
+            app:defaultValue="false">
+        </CheckBoxPreference>
+        <CheckBoxPreference
+            app:title="Medium"
+            app:key="diffMedium"
+            app:defaultValue="false">
+        </CheckBoxPreference>
+        <CheckBoxPreference
+            app:title="Hard"
+            app:key="diffHard"
+            app:defaultValue="false">
+        </CheckBoxPreference>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Category">
+
+        <ListPreference
+            android:title="Pick Category"
+            android:key="category"
+            android:defaultValue="9"
+            android:entries="@array/categories"
+            android:entryValues="@array/categories"
+            ></ListPreference>
+
+
+    </PreferenceCategory>
+
 
 </androidx.preference.PreferenceScreen>

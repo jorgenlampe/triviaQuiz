@@ -4,33 +4,8 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/question"
-        android:text="heisann"
+        android:text="Hello World!"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"></TextView>
-
-    <RadioButton
-        android:id="@+id/btn1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    </RadioButton>
-    <RadioButton
-    android:id="@+id/btn2"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-    </RadioButton>
-    <RadioButton
-    android:id="@+id/btn3"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-    </RadioButton>
-    <RadioButton
-    android:id="@+id/btn4"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-    </RadioButton>
-
-
-
 
 </LinearLayout>

@@ -17,6 +17,7 @@
             </intent-filter>
         </activity>
         <activity android:name="com.example.triviaquiz.QuestionView"></activity>
+        <activity android:name=".MyPreferenceActivity"></activity>
     </application>
 
 </manifest>
