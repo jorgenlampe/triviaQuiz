@@ -46,11 +46,30 @@
             android:key="category"
             android:defaultValue="9"
             android:entries="@array/categories"
-            android:entryValues="@array/categories"
+            android:entryValues="@array/categoryValues"
             ></ListPreference>
 
 
     </PreferenceCategory>
 
+    <PreferenceCategory android:title="Type of questions">
+        <CheckBoxPreference
+            app:title="Any Type"
+            app:key="anyType"
+            app:defaultValue="false">
+        </CheckBoxPreference>
+        <CheckBoxPreference
+            app:title="Multiple Choice"
+            app:key="multipleChoice"
+            app:defaultValue="false">
+        </CheckBoxPreference>
+        <CheckBoxPreference
+            app:title="True / False"
+            app:key="trueOrFalse"
+            app:defaultValue="false">
+        </CheckBoxPreference>
+
+
+    </PreferenceCategory>
 
 </androidx.preference.PreferenceScreen>
