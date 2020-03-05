@@ -23,4 +23,15 @@ public class Question    {
         this.correct_answer = correct_answer;
         this.incorrect_answers = incorrect_answers;
     }
+
+    public String getQuestion() {
+        return question;
+    }
+    public String getCorrect_answer() {
+        return correct_answer;
+    }
+
+    public String getIncorrect_answers(int pos) {
+        return incorrect_answers[pos];
+    }
 }

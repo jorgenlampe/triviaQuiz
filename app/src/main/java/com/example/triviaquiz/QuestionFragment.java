@@ -12,6 +12,11 @@ import androidx.fragment.app.Fragment;
 
 public class QuestionFragment extends Fragment {
     public static final String ARG_QUESTION = "object";
+    public static final String ARG_ALT1 = "objec2t";
+    public static final String ARG_ALT2 = "object3";
+    public static final String ARG_ALT3 = "object4";
+    public static final String ARG_ALT_CORRECT = "object5";
+
 
     @Nullable
     @Override
@@ -23,7 +28,11 @@ public class QuestionFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         Bundle args = getArguments();
-        ((TextView) view.findViewById(R.id.text1))
-                .setText(Integer.toString(args.getInt(ARG_QUESTION)));
+        ((TextView) view.findViewById(R.id.question)).setText(args.getString(ARG_QUESTION));
+        ((TextView) view.findViewById(R.id.alt1)).setText(args.getString(ARG_ALT1));
+        ((TextView) view.findViewById(R.id.alt2)).setText(args.getString(ARG_ALT2));
+        ((TextView) view.findViewById(R.id.alt3)).setText(args.getString(ARG_ALT3));
+        ((TextView) view.findViewById(R.id.alt4)).setText(args.getString(ARG_ALT_CORRECT));
+
     }
 }
