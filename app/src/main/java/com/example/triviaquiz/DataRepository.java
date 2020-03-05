@@ -29,19 +29,18 @@ public class DataRepository {
     private MutableLiveData<String> errorMessage = new MutableLiveData<>();
     public void downloadQuestions(Context context,String url) {
 
-        String mUrlString = "https://opentdb.com/api.php?amount=10&category=12&difficulty=easy&type=multiple";
+       // String mUrlString = "https://opentdb.com/api.php?amount=10&category=12&difficulty=easy&type=multiple";
         queue = MySingletonQueue.getInstance(context).getRequestQueue();
 
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                 Request.Method.GET,
-                mUrlString,
+                url,
                 null,
                 new Response.Listener<JSONObject>() {
 
                     @Override
                     public void onResponse(JSONObject response) {
-
                         try{Gson gson = new Gson();
 
 

@@ -3,16 +3,21 @@ package com.example.triviaquiz;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.Observer;
+import androidx.preference.PreferenceManager;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -29,12 +34,16 @@ public class QuestionActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_question);
 
+        String url = getIntent().getStringExtra("url");
+
         dataViewModel = new DataViewModel();
-        dataViewModel.downloadQuestions(this, "test");
+        dataViewModel.downloadQuestions(this, url);
 
         viewPager = findViewById(R.id.pager);
         this.subscribe();
     }
+
+
 
     @Override
     public void onBackPressed() {

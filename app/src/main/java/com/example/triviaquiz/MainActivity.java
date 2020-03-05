@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
     public class MainActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener{
@@ -23,74 +24,97 @@ import android.widget.Toast;
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);  //Denne bruker getSharedPreferences(... , ...). Tilgjengelig fra alle aktiviteter.
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
 
-    }
 
-    public String getUrl(SharedPreferences preferences){
-
-        StringBuilder url = new StringBuilder();
-
-        url.append("https://opentdb.com/api.php?amount=");
-
-        url.append(getNumberOfQuestions(preferences));
-        url.append(getCategory(preferences));
-        url.append(getDifficulty(preferences));
-        url.append(getType(preferences));
-
-        return url.toString();
 
     }
 
-    public String getNumberOfQuestions(SharedPreferences preferences){
+    public void startNewQuiz(View v){
 
-        String amount = preferences.getString("amount", "10");
-        return amount;
+
+        Intent intent = new Intent(this, QuestionActivity.class);
+
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String url = getUrl(preferences);
+
+        intent.putExtra("url", url);
+
+        startActivity(intent);
+
+
     }
 
-    public String getCategory(SharedPreferences preferences){
+    public void continueQuiz(View v){
 
-        String category = preferences.getString("category", "");
+        //sjekk om fil eksisterer, få tak i status på quiz, innstillinger, etc.
 
-        return "&category=" + category;
     }
 
-    public String getType(SharedPreferences preferences){
+        public String getUrl(SharedPreferences preferences){
 
-        Boolean anyType = preferences.getBoolean("anyType", false);
-        Boolean multipleChoice = preferences.getBoolean("multipleChoice", false);
-        Boolean trueOrFalse = preferences.getBoolean("trueOrFalse", false);
+            StringBuilder url = new StringBuilder();
 
-        if (anyType)
+            url.append("https://opentdb.com/api.php?amount=");
+
+            url.append(getNumberOfQuestions(preferences));
+            url.append(getCategory(preferences));
+            url.append(getDifficulty(preferences));
+            url.append(getType(preferences));
+
+            return url.toString();
+
+        }
+
+        public String getNumberOfQuestions(SharedPreferences preferences){
+
+            String amount = preferences.getString("amount", "10");
+            return amount;
+        }
+
+        public String getCategory(SharedPreferences preferences){
+
+            String category = preferences.getString("category", "");
+
+            return "&category=" + category;
+        }
+
+        public String getType(SharedPreferences preferences){
+
+            Boolean anyType = preferences.getBoolean("anyType", false);
+            Boolean multipleChoice = preferences.getBoolean("multipleChoice", false);
+            Boolean trueOrFalse = preferences.getBoolean("trueOrFalse", false);
+
+            if (anyType)
+                return "";
+            if (multipleChoice)
+                return "&type=multiple";
+            if (trueOrFalse)
+                return "&type=boolean";
+
             return "";
-        if (multipleChoice)
-            return "&type=multiple";
-        if (trueOrFalse)
-            return "&type=boolean";
 
-        return "";
+        }
 
-    }
+        //https://opentdb.com/api.php?amount=10&category=24&difficulty=easy&type=multiple
 
-    //https://opentdb.com/api.php?amount=10&category=24&difficulty=easy&type=multiple
+        public String getDifficulty(SharedPreferences preferences){
 
-    public String getDifficulty(SharedPreferences preferences){
+            Boolean diffAny = preferences.getBoolean("diffAny", false);
+            Boolean diffEasy = preferences.getBoolean("diffEasy", false);
+            Boolean diffMedium = preferences.getBoolean("diffMedium", false);
+            Boolean diffHard = preferences.getBoolean("diffHard", false);
 
-        Boolean diffAny = preferences.getBoolean("diffAny", false);
-        Boolean diffEasy = preferences.getBoolean("diffEasy", false);
-        Boolean diffMedium = preferences.getBoolean("diffMedium", false);
-        Boolean diffHard = preferences.getBoolean("diffHard", false);
+            if (diffAny)
+                return "";
+            if (diffEasy)
+                return "&difficulty=easy";
+            if (diffMedium)
+                return "&difficulty=medium";
+            if (diffHard)
+                return "&difficulty=hard";
 
-       if (diffAny)
-           return "";
-       if (diffEasy)
-           return "&difficulty=easy";
-       if (diffMedium)
-           return "&difficulty=medium";
-       if (diffHard)
-           return "&difficulty=hard";
+            return "";
 
-       return "";
-
-    }
+        }
 
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
@@ -121,4 +145,5 @@ import android.widget.Toast;
             return false;
 
         }
+
 }
