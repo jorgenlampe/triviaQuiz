@@ -27,7 +27,6 @@ public class QuestionActivity extends FragmentActivity {
     private static final int NUM_PAGES = 3;
     private ViewPager2 viewPager;
     private FragmentStateAdapter questionsAdapter;
-    private List<Question> questions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +68,7 @@ public class QuestionActivity extends FragmentActivity {
             @Override
             public void onChanged(String errorMessage) {
                 TextView tvResult = findViewById(R.id.question);
-                tvResult.setBackgroundColor(Color.RED);
+                //tvResult.setBackgroundColor(Color.RED);
                 tvResult.setText(errorMessage);
             }
         };

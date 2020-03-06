@@ -9,6 +9,8 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import java.util.List;
 
+import static com.example.triviaquiz.QuestionFragment.ARG_INC_ALT;
+
 
 public class QuestionsAdapter extends FragmentStateAdapter {
     List<Question> questions;
@@ -27,9 +29,7 @@ public class QuestionsAdapter extends FragmentStateAdapter {
         // Our object is just an integer :-P
         args.putInt(QuestionFragment.ARG_QUESTION, position + 1);
         args.putString(QuestionFragment.ARG_QUESTION, question.getQuestion());
-        args.putString(QuestionFragment.ARG_ALT1, question.getIncorrect_answers(0));
-        args.putString(QuestionFragment.ARG_ALT2, question.getIncorrect_answers(1));
-        args.putString(QuestionFragment.ARG_ALT3, question.getIncorrect_answers(2));
+        args.putStringArrayList(ARG_INC_ALT, question.getIncorrect_answers());
         args.putString(QuestionFragment.ARG_ALT_CORRECT, question.getCorrect_answer());
 
         fragment.setArguments(args);
