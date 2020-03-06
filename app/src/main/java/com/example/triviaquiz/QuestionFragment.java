@@ -38,7 +38,6 @@ public class QuestionFragment extends Fragment implements View.OnClickListener {
         alt3 = view.findViewById(R.id.alt3);
         alt4 = view.findViewById(R.id.alt4);
 
-        question.setOnClickListener(this);
         alt1.setOnClickListener(this);
         alt2.setOnClickListener(this);
         alt3.setOnClickListener(this);
@@ -68,6 +67,7 @@ public class QuestionFragment extends Fragment implements View.OnClickListener {
     }
 
     public void onClick(View view) {
+
         switch(view.getId()) {
             case R.id.alt1:
                 if(alt1.getText() == correctAnswer) {
@@ -75,6 +75,7 @@ public class QuestionFragment extends Fragment implements View.OnClickListener {
                 } else {
                     alt1.setBackgroundColor(getResources().getColor(R.color.incorrectAnswer));
                 }
+                disableClicks();
                 break;
             case R.id.alt2:
                 if(alt2.getText() == correctAnswer) {
@@ -82,7 +83,7 @@ public class QuestionFragment extends Fragment implements View.OnClickListener {
                 } else {
                     alt2.setBackgroundColor(getResources().getColor(R.color.incorrectAnswer));
                 }
-
+                disableClicks();
                 break;
             case R.id.alt3:
                 if(alt3.getText() == correctAnswer) {
@@ -90,6 +91,7 @@ public class QuestionFragment extends Fragment implements View.OnClickListener {
                 } else {
                     alt3.setBackgroundColor(getResources().getColor(R.color.incorrectAnswer));
                 }
+                disableClicks();
                 break;
             case R.id.alt4:
                 if(alt4.getText() == correctAnswer) {
@@ -97,7 +99,15 @@ public class QuestionFragment extends Fragment implements View.OnClickListener {
                 } else {
                     alt4.setBackgroundColor(getResources().getColor(R.color.incorrectAnswer));
                 }
+                disableClicks();
                 break;
         }
+    }
+
+    public void disableClicks() {
+        alt1.setClickable(false);
+        alt2.setClickable(false);
+        alt3.setClickable(false);
+        alt4.setClickable(false);
     }
 }
