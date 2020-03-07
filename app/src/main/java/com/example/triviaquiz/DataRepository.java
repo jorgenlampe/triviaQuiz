@@ -50,7 +50,16 @@ public class DataRepository {
                     public void onResponse(JSONObject response) {
                         try{Gson gson = new Gson();
                            JSONArray array = response.getJSONArray("results");
-                            String qs = gson.toJson(array);
+                            int length = array.length();
+                            ArrayList<Question> temp = new ArrayList<>();
+                            for (int i = 0; i < length; i++){
+                                JSONObject obj = array.getJSONObject(i);
+                                Question q = gson.fromJson(obj.toString(), Question.class);
+                                temp.add(q);
+                            }
+
+                            questions.postValue(temp);
+                            String qs = gson.toJson(temp);
                             FileOutputStream outputStream = context.openFileOutput(filename, Context.MODE_PRIVATE);
                             System.out.println(qs);
                             outputStream.write(qs.getBytes());
@@ -89,17 +98,12 @@ public class DataRepository {
             }
             inputStreamReader.close();
             String json = sb.toString();
-            JSONArray array = new JSONArray(json);
+            Type type = new TypeToken<ArrayList<Question>>(){}.getType();
             Gson gson = new Gson();
-            ArrayList<Question> temp = new ArrayList<>();
-            int length = array.length();
-            for (int i = 0; i < length; i++){
-                JSONObject obj = array.getJSONObject(i);
-                Question q = gson.fromJson(obj.toString(), Question.class);
-                temp.add(q);
-            }
+            List<Question> temp = gson.fromJson(json, type);
+            System.out.println(temp.get(0).getQuestion());
+
             questions.postValue(temp);
-            System.out.println(temp.get(1).getQuestion());
 
         } catch(Exception e) {
             e.printStackTrace();
