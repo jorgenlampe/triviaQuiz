@@ -12,9 +12,9 @@ public class DataViewModel {
     private MutableLiveData<List<Question>> mQuestions;
     private MutableLiveData<String> mErrorMessage;
 
-    public DataViewModel() {
+    public DataViewModel(Context context) {
         mRepository = new DataRepository();
-        mQuestions = mRepository.getQuestions();
+        mQuestions = mRepository.getQuestions(context);
         mErrorMessage = mRepository.getErrorMessage();
     }
 

@@ -35,7 +35,7 @@ public class QuestionActivity extends FragmentActivity {
 
         String url = getIntent().getStringExtra("url");
 
-        dataViewModel = new DataViewModel();
+        dataViewModel = new DataViewModel(this);
         dataViewModel.downloadQuestions(this, url);
 
         viewPager = findViewById(R.id.pager);
