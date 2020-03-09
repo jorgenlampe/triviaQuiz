@@ -35,49 +35,56 @@ public class DataRepository {
     private MutableLiveData<String> errorMessage = new MutableLiveData<>();
     private String filename = "questions.json";
     public void downloadQuestions(Context context,String url) {
-        System.out.println(url);
-       // String mUrlString = "https://opentdb.com/api.php?amount=10&category=12&difficulty=easy&type=multiple";
-        queue = MySingletonQueue.getInstance(context).getRequestQueue();
+
+        File file = context.getFileStreamPath(filename);
+        if (!file.exists()) {
+
+            // String mUrlString = "https://opentdb.com/api.php?amount=10&category=12&difficulty=easy&type=multiple";
+            queue = MySingletonQueue.getInstance(context).getRequestQueue();
 
 
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-                Request.Method.GET,
-                url,
-                null,
-                new Response.Listener<JSONObject>() {
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                    Request.Method.GET,
+                    url,
+                    null,
+                    new Response.Listener<JSONObject>() {
 
-                    @Override
-                    public void onResponse(JSONObject response) {
+                        @Override
+                        public void onResponse(JSONObject response) {
 
-                        try{Gson gson = new Gson();
-                           JSONArray array = response.getJSONArray("results");
-                            int length = array.length();
-                            ArrayList<Question> temp = new ArrayList<>();
-                            for (int i = 0; i < length; i++){
-                                JSONObject obj = array.getJSONObject(i);
-                                Question q = gson.fromJson(obj.toString(), Question.class);
-                                temp.add(q);
+                            try {
+                                Gson gson = new Gson();
+                                JSONArray array = response.getJSONArray("results");
+                                int length = array.length();
+                                ArrayList<Question> temp = new ArrayList<>();
+                                for (int i = 0; i < length; i++) {
+                                    JSONObject obj = array.getJSONObject(i);
+                                    Question q = gson.fromJson(obj.toString(), Question.class);
+                                    temp.add(q);
+                                }
+
+                                questions.postValue(temp);
+                                String qs = gson.toJson(temp);
+                                FileOutputStream outputStream = context.openFileOutput(filename, Context.MODE_PRIVATE);
+                                System.out.println(qs);
+                                outputStream.write(qs.getBytes());
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
-
-                            questions.postValue(temp);
-                            String qs = gson.toJson(temp);
-                            FileOutputStream outputStream = context.openFileOutput(filename, Context.MODE_PRIVATE);
-                            System.out.println(qs);
-                            outputStream.write(qs.getBytes());
-
-                        }  catch (Exception e)  {
-                            e.printStackTrace();
                         }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
 
-                        errorMessage.postValue(error.getMessage());
-                    }
-                });
-        queue.add(jsonObjectRequest);
+                            errorMessage.postValue(error.getMessage());
+                        }
+                    });
+            queue.add(jsonObjectRequest);
+
+        }
+        else loadData(context);
     }
 
     public MutableLiveData<List<Question>> getQuestions(Context context) {

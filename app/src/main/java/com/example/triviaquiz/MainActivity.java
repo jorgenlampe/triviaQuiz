@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,9 +38,7 @@ import java.util.List;
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);  //Denne bruker getSharedPreferences(... , ...). Tilgjengelig fra alle aktiviteter.
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
 
-
         dataViewModel.downloadQuestions(this, getUrl(sharedPreferences));
-
 
     }
 
@@ -51,6 +50,8 @@ import java.util.List;
                 public void onChanged(final List<Question> questions) {
 
 
+                    //usikker på dette
+
                     List<Question> questionsList = new ArrayList<>();
 
                     for (Question q : questions) {
@@ -61,7 +62,7 @@ import java.util.List;
 
                     }
 
-
+                //fra tidligere:
                //     questionsAdapter = new QuestionsAdapter(QuestionActivity.this, questions);
                  //   viewPager.setAdapter(questionsAdapter);
                 }
@@ -74,33 +75,23 @@ import java.util.List;
                     TextView tvResult = findViewById(R.id.question);
                     //tvResult.setBackgroundColor(Color.RED);
                     tvResult.setText(errorMessage);
+
                 }
             };
             dataViewModel.getmErrorMessage().observe(this, errorMessageObserver);
 
         }
-/*
+
     public void startNewQuiz(View v){
 
+//resette noen av preferencene...
 
-        Intent intent = new Intent(this, QuestionActivity.class);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);  //Denne bruker getSharedPreferences(... , ...). Tilgjengelig fra alle aktiviteter.
+        //sharedPreferences.registerOnSharedPreferenceChangeListener(this);
 
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String url = getUrl(preferences);
-
-        intent.putExtra("url", url);
-
-        startActivity(intent);
-
+        dataViewModel.downloadQuestions(this, getUrl(sharedPreferences));
 
     }
-
-    public void continueQuiz(View v){
-
-        Intent intent = new Intent(this, QuestionActivity.class);
-        startActivity(intent);
-
-    } */
 
         public String getUrl(SharedPreferences preferences){
 
@@ -197,14 +188,14 @@ import java.util.List;
 
                 case R.id.stopBtn:
 
-                    onDestroy();
-                    //slette info
+                    stopQuiz();
+
 
                 return true;
 
                 case R.id.newQuizBtn:
 
-                    //startNewQuiz();
+                    startNewQuiz(null);
 
             }
 
@@ -213,10 +204,18 @@ import java.util.List;
 
         }
 
+        private void stopQuiz() {
+
+        File file = getApplicationContext().getFileStreamPath("questions.json");
+            file.delete();
+
+
+        }
+
         @Override
         public void onDestroy(){
 
-//slette
+
             super.onDestroy();
         }
 
