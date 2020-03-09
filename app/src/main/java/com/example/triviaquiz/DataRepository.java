@@ -1,40 +1,55 @@
 package com.example.triviaquiz;
 
 import android.content.Context;
-import android.util.Log;
-import android.widget.LinearLayout;
+import android.content.SharedPreferences;
 
 import androidx.lifecycle.MutableLiveData;
+import androidx.preference.PreferenceManager;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
-import java.sql.Array;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-public class DataRepository {
+public class DataRepository implements SharedPreferences.OnSharedPreferenceChangeListener{
     private RequestQueue queue = null;
     private MutableLiveData<List<Question>> questions = new MutableLiveData<>();
     private MutableLiveData<String> errorMessage = new MutableLiveData<>();
     private String filename = "questions.json";
-    public void downloadQuestions(Context context,String url) {
+    private Set<String> answers = new HashSet<>();
+    private Set<String> correct_Answers = new HashSet<>();
+
+
+
+    public void addAnswer(String answer) {
+        answers.add(answer);
+    }
+
+    public Set<String> getAnswers() {
+        return answers;
+    }
+
+    public void downloadQuestions(Context context, String url) {
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);  //Denne bruker getSharedPreferences(... , ...). Tilgjengelig fra alle aktiviteter.
+        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
+
         System.out.println(url);
        // String mUrlString = "https://opentdb.com/api.php?amount=10&category=12&difficulty=easy&type=multiple";
         queue = MySingletonQueue.getInstance(context).getRequestQueue();
@@ -55,6 +70,11 @@ public class DataRepository {
                             for (int i = 0; i < length; i++){
                                 JSONObject obj = array.getJSONObject(i);
                                 Question q = gson.fromJson(obj.toString(), Question.class);
+                                correct_Answers.add(q.getCorrect_answer());
+                                SharedPreferences.Editor editor = sharedPreferences.edit();
+                                editor.putStringSet("correctAnswers", correct_Answers);
+                                editor.apply();
+
                                 temp.add(q);
                             }
 
@@ -76,6 +96,10 @@ public class DataRepository {
                     }
                 });
         queue.add(jsonObjectRequest);
+    }
+
+    public Set<String> getCorrect_Answers() {
+        return correct_Answers;
     }
 
     public MutableLiveData<List<Question>> getQuestions(Context context) {
@@ -110,4 +134,8 @@ public class DataRepository {
         }
     }
 
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+
+    }
 }

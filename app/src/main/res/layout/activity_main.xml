@@ -21,4 +21,18 @@
         android:text="Continue quiz"
         android:onClick="continueQuiz"></Button>
 
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/stopQuiz"
+        android:text="Stop quiz "
+        android:onClick="stopQuiz"></Button>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="125sp"
+        android:text="Resultat kommer her...."
+        android:id="@+id/tvResult"></TextView>
+
 </LinearLayout>
