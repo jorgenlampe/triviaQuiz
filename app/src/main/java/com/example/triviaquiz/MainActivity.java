@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
     public class MainActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener{
@@ -23,11 +24,13 @@ import android.widget.Toast;
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);  //Denne bruker getSharedPreferences(... , ...). Tilgjengelig fra alle aktiviteter.
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
+        LinearLayout linLayout = findViewById(R.id.mainLayout);
+        linLayout.addView(new QuestionView(this));
 
 
 
     }
-
+/*
     public void startNewQuiz(View v){
 
 
@@ -45,9 +48,10 @@ import android.widget.Toast;
 
     public void continueQuiz(View v){
 
-        //sjekk om fil eksisterer, få tak i status på quiz, innstillinger, etc.
+        Intent intent = new Intent(this, QuestionActivity.class);
+        startActivity(intent);
 
-    }
+    } */
 
         public String getUrl(SharedPreferences preferences){
 

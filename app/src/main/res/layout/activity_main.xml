@@ -5,20 +5,13 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:id="@+id/mainLayout">
 
-   <Button
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content"
-       android:id="@+id/btnNewQuiz"
-       android:text="Start new quiz"
-       android:onClick="startNewQuiz"></Button>
-
-    <Button
+    <com.example.triviaquiz.QuestionView
+        android:id="@+id/questionView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/continueQuiz"
-        android:text="Continue quiz"
-        android:onClick="continueQuiz"></Button>
+        android:layout_height="match_parent" />
+
 
 </LinearLayout>
