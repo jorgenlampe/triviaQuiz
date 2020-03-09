@@ -3,10 +3,25 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
-    <!-- Settings, should always be in the overflow -->
+    <item
+        android:id="@+id/newQuizBtn"
+        android:title="New Quiz"
+        android:icon="@drawable/ic_new"
+        app:showAsAction="always">
+
+    </item>
+
+
+    <item android:id="@+id/stopBtn"
+        android:title="STOP QUIZ"
+        android:icon="@drawable/ic_stop"
+        app:showAsAction="always">
+
+    </item>
+
     <item android:id="@+id/action_settings"
         android:title="@string/action_settings"
         android:icon="@drawable/ic_settings"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="always"/>
 
 </menu>

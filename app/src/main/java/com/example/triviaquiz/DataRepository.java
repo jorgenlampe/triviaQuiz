@@ -48,6 +48,7 @@ public class DataRepository {
 
                     @Override
                     public void onResponse(JSONObject response) {
+
                         try{Gson gson = new Gson();
                            JSONArray array = response.getJSONArray("results");
                             int length = array.length();
@@ -63,6 +64,7 @@ public class DataRepository {
                             FileOutputStream outputStream = context.openFileOutput(filename, Context.MODE_PRIVATE);
                             System.out.println(qs);
                             outputStream.write(qs.getBytes());
+
                         }  catch (Exception e)  {
                             e.printStackTrace();
                         }

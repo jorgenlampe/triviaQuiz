@@ -3,15 +3,18 @@ package com.example.triviaquiz;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
+import java.util.List;
+
 public class QuestionView extends LinearLayout {
 
-    public QuestionView(Context context) {
+    public QuestionView(Context context, List<Question> q) { //vet ikke om liste med spørsmål skal sendes med her....
         super(context);
 
         String infService = Context.LAYOUT_INFLATER_SERVICE;
@@ -26,6 +29,7 @@ public class QuestionView extends LinearLayout {
         Button alt4Btn = findViewById(R.id.alt4);
 
     }
+
     public QuestionView(Context context, AttributeSet attr) {
         super(context);
 

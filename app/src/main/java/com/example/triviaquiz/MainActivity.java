@@ -1,6 +1,7 @@
     package com.example.triviaquiz;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 import androidx.preference.ListPreference;
 import androidx.preference.PreferenceManager;
 
@@ -13,23 +14,71 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.List;
+
     public class MainActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener{
+
+        DataViewModel dataViewModel = new DataViewModel(this);
+       //private static List<Question> questionsList;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        subscribe();
+
+
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);  //Denne bruker getSharedPreferences(... , ...). Tilgjengelig fra alle aktiviteter.
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
-        LinearLayout linLayout = findViewById(R.id.mainLayout);
-        linLayout.addView(new QuestionView(this));
 
+
+        dataViewModel.downloadQuestions(this, getUrl(sharedPreferences));
 
 
     }
+
+
+        private void subscribe() {
+            final Observer<List<Question>> questionsObserver = new Observer<List<Question>>() {
+
+                @Override
+                public void onChanged(final List<Question> questions) {
+
+
+                    List<Question> questionsList = new ArrayList<>();
+
+                    for (Question q : questions) {
+                        questionsList.add(q);
+
+                        LinearLayout linLayout = findViewById(R.id.mainLayout);
+                        linLayout.addView(new QuestionView(getApplicationContext(), questionsList));
+
+                    }
+
+
+               //     questionsAdapter = new QuestionsAdapter(QuestionActivity.this, questions);
+                 //   viewPager.setAdapter(questionsAdapter);
+                }
+            };
+            dataViewModel.getmQuestions().observe(this,questionsObserver);
+
+            final Observer<String> errorMessageObserver = new Observer<String>() {
+                @Override
+                public void onChanged(String errorMessage) {
+                    TextView tvResult = findViewById(R.id.question);
+                    //tvResult.setBackgroundColor(Color.RED);
+                    tvResult.setText(errorMessage);
+                }
+            };
+            dataViewModel.getmErrorMessage().observe(this, errorMessageObserver);
+
+        }
 /*
     public void startNewQuiz(View v){
 
@@ -144,10 +193,31 @@ import android.widget.Toast;
                     startActivity(intent);
                     return true;
 
+
+
+                case R.id.stopBtn:
+
+                    onDestroy();
+                    //slette info
+
+                return true;
+
+                case R.id.newQuizBtn:
+
+                    //startNewQuiz();
+
             }
+
 
             return false;
 
+        }
+
+        @Override
+        public void onDestroy(){
+
+//slette
+            super.onDestroy();
         }
 
 }
