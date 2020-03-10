@@ -9,7 +9,10 @@ import android.view.LayoutInflater;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
@@ -49,7 +52,7 @@ public class QuestionView extends LinearLayout {
 
 
     }
-    public void setQuestion(Question q) {
+    public void setQuestion(Question q, String answerChosen) {
         List<String> answers = q.getIncorrect_answers();
         answers.add(q.getCorrect_answer());
         qTv.setText(q.getQuestion());
@@ -64,6 +67,18 @@ public class QuestionView extends LinearLayout {
             r3.setButtonDrawable(new StateListDrawable());
             r4.setButtonDrawable(new StateListDrawable());
 
+        }
+
+        //Setter check dersom chosen answer er lik et alternativ
+        RadioGroup rGroup = findViewById(R.id.radioGroup);
+        int count = rGroup.getChildCount();
+        if(answerChosen != null) {
+            for(int i = 0; i<count; i++) {
+                RadioButton rb = (RadioButton) rGroup.getChildAt(i);
+                if(rb.getText().equals(answerChosen)) {
+                    rb.setChecked(true);
+                }
+            }
         }
     }
     public void setText(String txt) {

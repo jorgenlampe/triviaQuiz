@@ -41,22 +41,8 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.MyView
             super(v);
             questionView = v;
             String answerChosen = null;
-
-            System.out.println(getLayoutPosition());
-
-            if(getAdapterPosition() != RecyclerView.NO_POSITION) {
-                answerChosen = answersChosen[getAdapterPosition()];
-            }
             RadioGroup rGroup = v.findViewById(R.id.radioGroup);
-            int count = rGroup.getChildCount();
-            if(answerChosen != null) {
-                for(int i = 0; i<count; i++) {
-                    RadioButton rb = (RadioButton) rGroup.getChildAt(i);
-                    if(rb.getText().equals(answerChosen)) {
-                        rb.setChecked(true);
-                    }
-                }
-            }
+
             rGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -94,7 +80,7 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.MyView
     public void onBindViewHolder(MyViewHolder holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        holder.questionView.setQuestion(questions.get(position));
+        holder.questionView.setQuestion(questions.get(position), answersChosen[position]);
     }
 
 
