@@ -14,6 +14,7 @@ import java.util.List;
 
 public class QuestionView extends LinearLayout {
     TextView qTv;
+    RadioButton r1;
 
     public QuestionView(Context context) { //vet ikke om liste med spørsmål skal sendes med her....
         super(context);
@@ -24,10 +25,8 @@ public class QuestionView extends LinearLayout {
         li.inflate(R.layout.question_view, this, true);
 
         qTv = findViewById(R.id.question);
-        Button alt1Btn = findViewById(R.id.alt1);
-        Button alt2Btn = findViewById(R.id.alt2);
-        Button alt3Btn = findViewById(R.id.alt3);
-        Button alt4Btn = findViewById(R.id.alt4);
+        r1 = findViewById(R.id.alt1Button);
+
 
     }
 
@@ -40,10 +39,7 @@ public class QuestionView extends LinearLayout {
         li.inflate(R.layout.question_view, this, true);
 
         qTv = findViewById(R.id.question);
-        Button alt1Btn = findViewById(R.id.alt1);
-        Button alt2Btn = findViewById(R.id.alt2);
-        Button alt3Btn = findViewById(R.id.alt3);
-        Button alt4Btn = findViewById(R.id.alt4);
+
 
     }
 
@@ -56,15 +52,15 @@ public class QuestionView extends LinearLayout {
         li.inflate(R.layout.question_view, this, false);
 
         qTv = findViewById(R.id.question);
-        Button alt1Btn = findViewById(R.id.alt1);
-        Button alt2Btn = findViewById(R.id.alt2);
-        Button alt3Btn = findViewById(R.id.alt3);
-        Button alt4Btn = findViewById(R.id.alt4);
+
 
     }
     public void setQuestion(Question q) {
         qTv.setText(q.getQuestion());
-}
+    }
+    public void setText(String txt) {
+        r1.setText(txt);
+    }
 
 
 
