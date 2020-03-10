@@ -21,6 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -83,28 +84,20 @@ import java.util.List;
             dataViewModel.getmErrorMessage().observe(this, errorMessageObserver);
 
         }
-/*
-    public void startNewQuiz(View v){
+
+    public void startNewQuiz(){
 
 
-        Intent intent = new Intent(this, QuestionActivity.class);
+        //slette noe fra sharedpreferences
+
+        stopQuiz();
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String url = getUrl(preferences);
-
-        intent.putExtra("url", url);
-
-        startActivity(intent);
+        dataViewModel.downloadQuestions(getApplicationContext(), getUrl(preferences));
 
 
     }
 
-    public void continueQuiz(View v){
-
-        Intent intent = new Intent(this, QuestionActivity.class);
-        startActivity(intent);
-
-    } */
 
         public String getUrl(SharedPreferences preferences){
 
@@ -178,9 +171,6 @@ import java.util.List;
             // TODO Check the shared preference and key parameters
             SharedPreferences myprefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
 
-            String amount = myprefs.getString("amount", "10");
-
-            Toast.makeText(this, key + " endret seg...", Toast.LENGTH_SHORT).show();
         }
 
         @Override
@@ -197,18 +187,15 @@ import java.util.List;
                     startActivity(intent);
                     return true;
 
-
-
                 case R.id.stopBtn:
 
-                    onDestroy();
-                    //slette info
+                    stopQuiz();
 
                 return true;
 
                 case R.id.newQuizBtn:
 
-                    //startNewQuiz();
+                    startNewQuiz();
 
             }
 
@@ -217,11 +204,16 @@ import java.util.List;
 
         }
 
-        @Override
-        public void onDestroy(){
+        private void stopQuiz() {
 
-//slette
-            super.onDestroy();
+            File file = getApplicationContext().getFileStreamPath("questions.json");
+
+            if (file.exists()) {
+                file.delete();
+            }
+
+
         }
+
 
 }
