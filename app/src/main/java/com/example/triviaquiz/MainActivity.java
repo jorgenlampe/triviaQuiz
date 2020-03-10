@@ -4,6 +4,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.preference.ListPreference;
 import androidx.preference.PreferenceManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.PagerAdapter;
+import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.Context;
 import android.content.Intent;
@@ -22,22 +26,29 @@ import java.util.List;
 
     public class MainActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener{
 
-        DataViewModel dataViewModel = new DataViewModel(this);
-       //private static List<Question> questionsList;
+        private ViewPager2 viewPager;
+        private PagerAdapter pager;
+        private DataViewModel dataViewModel = new DataViewModel(this);
+        private static List<Question> questionsList;
+        private RecyclerView recyclerView;
+        private RecyclerView.Adapter mAdapter;
+        private RecyclerView.LayoutManager layoutManager;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        subscribe();
-
-
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);  //Denne bruker getSharedPreferences(... , ...). Tilgjengelig fra alle aktiviteter.
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
 
+        dataViewModel.getmQuestions();
+        recyclerView = findViewById(R.id.my_recycler_view);
+        recyclerView.setHasFixedSize(true); //bedre ytelse med fast størrelse på layout
 
+        layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        subscribe();
         dataViewModel.downloadQuestions(this, getUrl(sharedPreferences));
 
 
@@ -49,21 +60,8 @@ import java.util.List;
 
                 @Override
                 public void onChanged(final List<Question> questions) {
-
-
-                    List<Question> questionsList = new ArrayList<>();
-
-                    for (Question q : questions) {
-                        questionsList.add(q);
-
-                        LinearLayout linLayout = findViewById(R.id.mainLayout);
-                        linLayout.addView(new QuestionView(getApplicationContext(), questionsList));
-
-                    }
-
-
-               //     questionsAdapter = new QuestionsAdapter(QuestionActivity.this, questions);
-                 //   viewPager.setAdapter(questionsAdapter);
+                    mAdapter = new QuestionAdapter(questions);
+                    recyclerView.setAdapter(mAdapter);
                 }
             };
             dataViewModel.getmQuestions().observe(this,questionsObserver);

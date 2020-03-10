@@ -13,16 +13,33 @@ import android.widget.TextView;
 import java.util.List;
 
 public class QuestionView extends LinearLayout {
+    TextView qTv;
 
-    public QuestionView(Context context, List<Question> q) { //vet ikke om liste med spørsmål skal sendes med her....
+    public QuestionView(Context context) { //vet ikke om liste med spørsmål skal sendes med her....
         super(context);
 
         String infService = Context.LAYOUT_INFLATER_SERVICE;
         LayoutInflater li;
-        li = (LayoutInflater)getContext().getSystemService(infService);
+        li = (LayoutInflater) getContext().getSystemService(infService);
         li.inflate(R.layout.question_view, this, true);
 
-        TextView qTv = findViewById(R.id.question);
+        qTv = findViewById(R.id.question);
+        Button alt1Btn = findViewById(R.id.alt1);
+        Button alt2Btn = findViewById(R.id.alt2);
+        Button alt3Btn = findViewById(R.id.alt3);
+        Button alt4Btn = findViewById(R.id.alt4);
+
+    }
+
+    public QuestionView(Context context, Question q) { //vet ikke om liste med spørsmål skal sendes med her....
+        super(context);
+
+        String infService = Context.LAYOUT_INFLATER_SERVICE;
+        LayoutInflater li;
+        li = (LayoutInflater) getContext().getSystemService(infService);
+        li.inflate(R.layout.question_view, this, true);
+
+        qTv = findViewById(R.id.question);
         Button alt1Btn = findViewById(R.id.alt1);
         Button alt2Btn = findViewById(R.id.alt2);
         Button alt3Btn = findViewById(R.id.alt3);
@@ -35,16 +52,19 @@ public class QuestionView extends LinearLayout {
 
         String infService = Context.LAYOUT_INFLATER_SERVICE;
         LayoutInflater li;
-        li = (LayoutInflater)getContext().getSystemService(infService);
-        li.inflate(R.layout.question_view, this, true);
+        li = (LayoutInflater) getContext().getSystemService(infService);
+        li.inflate(R.layout.question_view, this, false);
 
-        TextView qTv = findViewById(R.id.question);
+        qTv = findViewById(R.id.question);
         Button alt1Btn = findViewById(R.id.alt1);
         Button alt2Btn = findViewById(R.id.alt2);
         Button alt3Btn = findViewById(R.id.alt3);
         Button alt4Btn = findViewById(R.id.alt4);
 
     }
+    public void setQuestion(Question q) {
+        qTv.setText(q.getQuestion());
+}
 
 
 
