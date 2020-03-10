@@ -16,7 +16,6 @@ public class Question    {
     private String question;
     private String correct_answer;
     private String [] incorrect_answers;
-    private boolean answered = false;
 
     public Question(String category, String type, String difficulty, String question, String correct_answer, String [] incorrect_answers) {
         this.category = category;
@@ -36,11 +35,5 @@ public class Question    {
 
     public ArrayList<String> getIncorrect_answers() {
         return new ArrayList<>(Arrays.asList(incorrect_answers));
-    }
-    public boolean getAnswered() {
-        return answered;
-    }
-    public void setAnswered(boolean answered) {
-        this.answered = answered;
     }
 }

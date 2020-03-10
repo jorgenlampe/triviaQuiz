@@ -34,8 +34,11 @@ import java.util.List;
         private QuestionAdapter mAdapter;
         private RecyclerView.LayoutManager layoutManager;
         private String[] answers;
+        private static final String SAVED_ANSWERS = "SAVED";
+        private static final String KEY = "STRINGS";
 
-    @Override
+
+        @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -55,23 +58,23 @@ import java.util.List;
 
     //disse to burde kanskje flyttes til datarepository? Usikker, funker slik de er nå da. Må teste de
     private void saveAnswers() {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);  //Denne bruker getSharedPreferences(... , ...). Tilgjengelig fra alle aktiviteter.
+        SharedPreferences sharedPreferences = getSharedPreferences(SAVED_ANSWERS, MODE_PRIVATE);  //Denne bruker getSharedPreferences(... , ...). Tilgjengelig fra alle aktiviteter.
         SharedPreferences.Editor editor = sharedPreferences.edit();
         Gson gson = new Gson();
         String json = gson.toJson(answers);
-        editor.putString("answers given", json);
+        editor.putString(KEY, json);
         editor.apply();
     }
 
     private void loadAnswers() {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);  //Denne bruker getSharedPreferences(... , ...). Tilgjengelig fra alle aktiviteter.
+        SharedPreferences sharedPreferences = getSharedPreferences(SAVED_ANSWERS, MODE_PRIVATE);  //Denne bruker getSharedPreferences(... , ...). Tilgjengelig fra alle aktiviteter.
         Gson gson = new Gson();
-        String json = sharedPreferences.getString("answers given", null);
+        String json = sharedPreferences.getString(KEY, null);
         answers = gson.fromJson(json, String[].class);
+        System.out.println(json);
         if(json == null) {
             answers = new String[10];
         }
-        System.out.println(answers[1]);
     }
     private void subscribe() {
          final Observer<List<Question>> questionsObserver = new Observer<List<Question>>() {
@@ -84,7 +87,7 @@ import java.util.List;
                      @Override
                      public void onItemChanged(int position, String answer) {
                          answers[position] = answer;
-                         System.out.println(answers[position] + " " + position);
+                         saveAnswers();
                      }
                  });
             }
@@ -107,6 +110,7 @@ import java.util.List;
 
 
         //slette noe fra sharedpreferences
+        answers = new String[10];
 
         stopQuiz();
 
@@ -235,8 +239,8 @@ import java.util.List;
 
         @Override
         public void onDestroy(){
-            super.onDestroy();
             saveAnswers();
+            super.onDestroy();
         }
 
 }

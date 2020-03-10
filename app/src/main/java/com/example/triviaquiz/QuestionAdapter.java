@@ -41,6 +41,9 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.MyView
             super(v);
             questionView = v;
             String answerChosen = null;
+
+            System.out.println(getLayoutPosition());
+
             if(getAdapterPosition() != RecyclerView.NO_POSITION) {
                 answerChosen = answersChosen[getAdapterPosition()];
             }

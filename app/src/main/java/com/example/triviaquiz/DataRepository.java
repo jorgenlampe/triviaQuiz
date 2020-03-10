@@ -66,7 +66,6 @@ public class DataRepository {
                                 questions.postValue(temp);
                                 String qs = gson.toJson(temp);
                                 FileOutputStream outputStream = context.openFileOutput(filename, Context.MODE_PRIVATE);
-                                System.out.println(qs);
                                 outputStream.write(qs.getBytes());
 
                             } catch (Exception e) {
@@ -110,8 +109,6 @@ public class DataRepository {
             Type type = new TypeToken<ArrayList<Question>>(){}.getType();
             Gson gson = new Gson();
             List<Question> temp = gson.fromJson(json, type);
-            System.out.println(temp.get(0).getQuestion());
-
             questions.postValue(temp);
 
         } catch(Exception e) {
