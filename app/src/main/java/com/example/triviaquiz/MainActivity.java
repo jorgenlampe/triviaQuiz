@@ -31,9 +31,9 @@ import java.util.List;
         private DataViewModel dataViewModel = new DataViewModel(this);
         private static List<Question> questionsList;
         private RecyclerView recyclerView;
-        private RecyclerView.Adapter mAdapter;
+        private QuestionAdapter mAdapter;
         private RecyclerView.LayoutManager layoutManager;
-
+        private String[] answers = new String[10];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,21 +54,27 @@ import java.util.List;
 
     }
 
+    private void subscribe() {
+         final Observer<List<Question>> questionsObserver = new Observer<List<Question>>() {
 
-        private void subscribe() {
-            final Observer<List<Question>> questionsObserver = new Observer<List<Question>>() {
+            @Override
+            public void onChanged(final List<Question> questions) {
+                 mAdapter = new QuestionAdapter(questions);
+                 recyclerView.setAdapter(mAdapter);
+                 mAdapter.setOnCheckedChangeListener(new QuestionAdapter.OnCheckedChangeListener() {
+                     @Override
+                     public void onItemChanged(int position, String answer) {
+                         answers[position] = answer;
+                         System.out.println(answers[position] + " " + position);
+                     }
+                 });
+            }
+         };
+         dataViewModel.getmQuestions().observe(this,questionsObserver);
 
-                @Override
-                public void onChanged(final List<Question> questions) {
-                    mAdapter = new QuestionAdapter(questions);
-                    recyclerView.setAdapter(mAdapter);
-                }
-            };
-            dataViewModel.getmQuestions().observe(this,questionsObserver);
-
-            final Observer<String> errorMessageObserver = new Observer<String>() {
-                @Override
-                public void onChanged(String errorMessage) {
+         final Observer<String> errorMessageObserver = new Observer<String>() {
+             @Override
+             public void onChanged(String errorMessage) {
                     TextView tvResult = findViewById(R.id.question);
                     //tvResult.setBackgroundColor(Color.RED);
                     tvResult.setText(errorMessage);
