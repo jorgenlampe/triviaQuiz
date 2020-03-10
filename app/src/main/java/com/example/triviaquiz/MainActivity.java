@@ -22,19 +22,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
 import java.util.List;
 
     public class MainActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener{
 
-        private ViewPager2 viewPager;
-        private PagerAdapter pager;
         private DataViewModel dataViewModel = new DataViewModel(this);
-        private static List<Question> questionsList;
         private RecyclerView recyclerView;
         private QuestionAdapter mAdapter;
         private RecyclerView.LayoutManager layoutManager;
-        private String[] answers = new String[10];
+        private String[] answers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +41,7 @@ import java.util.List;
         setContentView(R.layout.activity_main);
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);  //Denne bruker getSharedPreferences(... , ...). Tilgjengelig fra alle aktiviteter.
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
+        loadAnswers();
 
         dataViewModel.getmQuestions();
         recyclerView = findViewById(R.id.my_recycler_view);
@@ -51,16 +51,34 @@ import java.util.List;
         recyclerView.setLayoutManager(layoutManager);
         subscribe();
         dataViewModel.downloadQuestions(this, getUrl(sharedPreferences));
-
-
     }
 
+    //disse to burde kanskje flyttes til datarepository? Usikker, funker slik de er nå da. Må teste de
+    private void saveAnswers() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);  //Denne bruker getSharedPreferences(... , ...). Tilgjengelig fra alle aktiviteter.
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(answers);
+        editor.putString("answers given", json);
+        editor.apply();
+    }
+
+    private void loadAnswers() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);  //Denne bruker getSharedPreferences(... , ...). Tilgjengelig fra alle aktiviteter.
+        Gson gson = new Gson();
+        String json = sharedPreferences.getString("answers given", null);
+        answers = gson.fromJson(json, String[].class);
+        if(json == null) {
+            answers = new String[10];
+        }
+        System.out.println(answers[1]);
+    }
     private void subscribe() {
          final Observer<List<Question>> questionsObserver = new Observer<List<Question>>() {
 
             @Override
             public void onChanged(final List<Question> questions) {
-                 mAdapter = new QuestionAdapter(questions);
+                 mAdapter = new QuestionAdapter(questions, answers);
                  recyclerView.setAdapter(mAdapter);
                  mAdapter.setOnCheckedChangeListener(new QuestionAdapter.OnCheckedChangeListener() {
                      @Override
@@ -170,7 +188,6 @@ import java.util.List;
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
             // TODO Check the shared preference and key parameters
             SharedPreferences myprefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
-
         }
 
         @Override
@@ -186,6 +203,8 @@ import java.util.List;
                     Intent intent = new Intent(this, MyPreferenceActivity.class);
                     startActivity(intent);
                     return true;
+
+
 
                 case R.id.stopBtn:
 
@@ -211,9 +230,13 @@ import java.util.List;
             if (file.exists()) {
                 file.delete();
             }
-
-
         }
 
+
+        @Override
+        public void onDestroy(){
+            super.onDestroy();
+            saveAnswers();
+        }
 
 }

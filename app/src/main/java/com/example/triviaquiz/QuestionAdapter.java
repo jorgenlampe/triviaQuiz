@@ -18,7 +18,7 @@ import java.util.List;
 
 public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.MyViewHolder> {
     private List<Question> questions;
-    private Context context;
+    private String[] answersChosen;
     private OnCheckedChangeListener mListener;
 
     public interface OnCheckedChangeListener {
@@ -37,10 +37,23 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.MyView
         public QuestionView questionView;
 
 
-        public MyViewHolder(QuestionView v, final OnCheckedChangeListener listener) {
+        public MyViewHolder(QuestionView v, final OnCheckedChangeListener listener, String[] answersChosen) {
             super(v);
             questionView = v;
+            String answerChosen = null;
+            if(getAdapterPosition() != RecyclerView.NO_POSITION) {
+                answerChosen = answersChosen[getAdapterPosition()];
+            }
             RadioGroup rGroup = v.findViewById(R.id.radioGroup);
+            int count = rGroup.getChildCount();
+            if(answerChosen != null) {
+                for(int i = 0; i<count; i++) {
+                    RadioButton rb = (RadioButton) rGroup.getChildAt(i);
+                    if(rb.getText().equals(answerChosen)) {
+                        rb.setChecked(true);
+                    }
+                }
+            }
             rGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -58,8 +71,9 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.MyView
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public QuestionAdapter(List<Question> myDataset) {
+    public QuestionAdapter(List<Question> myDataset, String[] answersChosen) {
         questions = myDataset;
+        this.answersChosen = answersChosen;
     }
 
     // Create new views (invoked by the layout manager)
@@ -68,7 +82,7 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.MyView
                                                      int viewType) {
         // create a new view
         QuestionView questionView = new QuestionView(parent.getContext());
-        MyViewHolder vh = new MyViewHolder(questionView, mListener);
+        MyViewHolder vh = new MyViewHolder(questionView, mListener, answersChosen);
         return vh;
     }
 
