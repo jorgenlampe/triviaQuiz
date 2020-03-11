@@ -24,8 +24,13 @@ import android.widget.Toast;
 import java.io.File;
 import com.google.gson.Gson;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
     public class MainActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener{
 
@@ -34,6 +39,12 @@ import java.util.List;
         private QuestionAdapter mAdapter;
         private RecyclerView.LayoutManager layoutManager;
         private String[] answers;
+        private List<String> correctAnswers = new ArrayList<>();
+
+        public List<String> getCorrectAnswers() {
+            return correctAnswers;
+        }
+
         private static final String SAVED_ANSWERS = "SAVED";
         private static final String KEY = "STRINGS";
 
@@ -41,19 +52,32 @@ import java.util.List;
         @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+
         setContentView(R.layout.activity_main);
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);  //Denne bruker getSharedPreferences(... , ...). Tilgjengelig fra alle aktiviteter.
-        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
-        loadAnswers();
 
-        dataViewModel.getmQuestions();
-        recyclerView = findViewById(R.id.my_recycler_view);
-        recyclerView.setHasFixedSize(true); //bedre ytelse med fast størrelse på layout
 
-        layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
-        subscribe();
-        dataViewModel.downloadQuestions(this, getUrl(sharedPreferences));
+
+                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+                sharedPreferences.registerOnSharedPreferenceChangeListener(this);
+
+                if(getIntent()!= null){
+                    answers = new String[10];
+                }
+
+                loadAnswers();
+
+                dataViewModel.getmQuestions();
+                recyclerView = findViewById(R.id.my_recycler_view);
+                recyclerView.setHasFixedSize(true); //bedre ytelse med fast størrelse på layout
+
+                layoutManager = new LinearLayoutManager(this);
+                recyclerView.setLayoutManager(layoutManager);
+                subscribe();
+                dataViewModel.downloadQuestions(this, getUrl(sharedPreferences));
+
+
     }
 
     //disse to burde kanskje flyttes til datarepository? Usikker, funker slik de er nå da. Må teste de
@@ -77,18 +101,53 @@ import java.util.List;
         }
     }
     private void subscribe() {
+
+
          final Observer<List<Question>> questionsObserver = new Observer<List<Question>>() {
 
             @Override
             public void onChanged(final List<Question> questions) {
                  mAdapter = new QuestionAdapter(questions, answers);
                  recyclerView.setAdapter(mAdapter);
+
+                 for (Question q : questions) {
+                     correctAnswers.add(q.getCorrect_answer());
+                 }
+
                  mAdapter.setOnCheckedChangeListener(new QuestionAdapter.OnCheckedChangeListener() {
                      @Override
                      public void onItemChanged(int position, String answer) {
                          answers[position] = answer;
                          saveAnswers();
-                     }
+
+
+                         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                         SharedPreferences answers = getSharedPreferences(SAVED_ANSWERS, MODE_PRIVATE);
+               //          int amountInt = Integer.parseInt(sharedPreferences.getString("amount", "10"));
+
+
+                         Map<String, ?> answered = answers.getAll();
+
+                         String o = (String) answered.get("STRINGS");
+
+                         if (!o.contains("null")) {
+
+                             Intent intent = new Intent(getApplicationContext(), Result.class);
+
+                             intent.putExtra("answers", o);
+                             intent.putExtra("correctAnswers", (Serializable) getCorrectAnswers());
+                             startActivity(intent);
+
+
+
+                             stopQuiz();
+
+                         }
+
+
+                         }
+
+
                  });
             }
          };

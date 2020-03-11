@@ -21,6 +21,7 @@
         </activity>
         <activity android:name=".QuestionView" />
         <activity android:name=".MyPreferenceActivity" />
+        <activity android:name=".Result"></activity>
     </application>
 
 </manifest>
