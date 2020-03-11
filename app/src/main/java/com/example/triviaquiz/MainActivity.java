@@ -44,7 +44,6 @@ import java.util.Set;
         private String[] correctList;
         private int numberOfQuestions;
 
-
         private static final String SAVED_ANSWERS = "SAVED";
         private static final String KEY = "STRINGS";
 
@@ -57,10 +56,9 @@ import java.util.Set;
                 SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
                 sharedPreferences.registerOnSharedPreferenceChangeListener(this);
 
+
                 loadAnswers();
-                numberOfQuestions = getNumberOfQuestions();
-                correctList = new String[numberOfQuestions];
-                answers = new String[numberOfQuestions];
+
                 dataViewModel.getmQuestions();
                 recyclerView = findViewById(R.id.my_recycler_view);
                 recyclerView.setHasFixedSize(true); //bedre ytelse med fast størrelse på layout
@@ -71,6 +69,18 @@ import java.util.Set;
                 dataViewModel.downloadQuestions(this, getUrl(sharedPreferences));
 
     }
+
+
+        public int getNoOfAnsweredQuestions(){
+
+            int notAnswered = 0;
+            for (int i = 0; i < answers.length; i++)
+                if (answers[i]==null)
+                    notAnswered++;
+
+            return answers.length - notAnswered;
+
+        }
         public int getNumberOfQuestions() {
 
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -93,15 +103,13 @@ import java.util.Set;
         answers = gson.fromJson(json, String[].class);
         System.out.println(json);
         if(json == null) {
-            answers = new String[10];
+            answers = new String[numberOfQuestions];
         }
     }
     private void subscribe() {
          final Observer<List<Question>> questionsObserver = new Observer<List<Question>>() {
             @Override
             public void onChanged(final List<Question> questions) {
-                System.out.println(questions.size());
-                System.out.println(answers.length);
                  mAdapter = new QuestionAdapter(questions, answers);
                  recyclerView.setAdapter(mAdapter);
                  for (int i = 0; i<correctList.length;i++) {
@@ -117,15 +125,10 @@ import java.util.Set;
                         for (int i = 0; i < answers.length; i++)
                             if (answers[i]==null) {
                                 count++;
-
                             }
-
                         if (count == 0) {
-
-
                             stopQuiz();
                             getResult();
-
                         }
                             }
 
@@ -291,7 +294,7 @@ import java.util.Set;
 
                 case R.id.stopBtn:
 
-                    stopQuiz();
+                    getResult();
 
                 return true;
 
