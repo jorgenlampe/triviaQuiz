@@ -39,12 +39,8 @@ import java.util.Set;
         private QuestionAdapter mAdapter;
         private RecyclerView.LayoutManager layoutManager;
         private String[] answers;
-        private List<String> correctAnswers = new ArrayList<>();
-        private String[] correctList;
+        private String[] correctList = new String[10];
 
-        public List<String> getCorrectAnswers() {
-            return correctAnswers;
-        }
 
         private static final String SAVED_ANSWERS = "SAVED";
         private static final String KEY = "STRINGS";
@@ -53,12 +49,7 @@ import java.util.Set;
         @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
-
         setContentView(R.layout.activity_main);
-
-
 
                 SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
                 sharedPreferences.registerOnSharedPreferenceChangeListener(this);
@@ -102,28 +93,20 @@ import java.util.Set;
         }
     }
     private void subscribe() {
-
-
          final Observer<List<Question>> questionsObserver = new Observer<List<Question>>() {
-
             @Override
             public void onChanged(final List<Question> questions) {
                  mAdapter = new QuestionAdapter(questions, answers);
                  recyclerView.setAdapter(mAdapter);
-
-                 for (Question q : questions) {
-                     correctAnswers.add(q.getCorrect_answer());
-
+                 for (int i = 0; i<10;i++) {
+                    correctList[i] = questions.get(i).getCorrect_answer();
+                     System.out.println(questions.get(i).getCorrect_answer());
                  }
-
-
-
                  mAdapter.setOnCheckedChangeListener(new QuestionAdapter.OnCheckedChangeListener() {
                      @Override
                      public void onItemChanged(int position, String answer) {
                          answers[position] = answer;
                          saveAnswers();
-
                          int count = 0;
                         for (int i = 0; i < answers.length; i++)
                             if (answers[i]==null) {
@@ -176,12 +159,9 @@ import java.util.Set;
 
         private void getResult() {
 
-            correctList = new String[10];
 
             int noOfCorrectAnswers = 0;
-
             for (int i = 0; i < 10; i++) {
-                correctList[i] = correctAnswers.get(i);
                 Log.d("getres", correctList[i]);
                 Log.d("getres2", answers[i]);
                 if (answers[i].equals(correctList[i])) {

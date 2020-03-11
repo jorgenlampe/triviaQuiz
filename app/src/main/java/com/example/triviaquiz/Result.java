@@ -110,6 +110,7 @@ Log.d("endring", "nei");
                         Log.d("oooo", "JADA");
                     }
                 }
+                System.out.println(String.valueOf(count));
                 return String.valueOf(count);
 
             }
