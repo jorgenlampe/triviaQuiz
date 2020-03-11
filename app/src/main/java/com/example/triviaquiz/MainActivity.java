@@ -56,7 +56,8 @@ import java.util.Set;
                 SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
                 sharedPreferences.registerOnSharedPreferenceChangeListener(this);
 
-
+                answers = new String[numberOfQuestions];
+                correctList = new String[numberOfQuestions];
                 loadAnswers();
 
                 dataViewModel.getmQuestions();
