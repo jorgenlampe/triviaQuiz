@@ -43,6 +43,11 @@ import java.util.Set;
         private String[] answers;
         private String[] correctList = new String[10];
 
+        public int getAmount() {
+
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+            return Integer.parseInt(sharedPreferences.getString("amount", "10"));
+        }
 
         private static final String SAVED_ANSWERS = "SAVED";
         private static final String KEY = "STRINGS";
@@ -71,7 +76,7 @@ import java.util.Set;
                 subscribe();
                 dataViewModel.downloadQuestions(this, getUrl(sharedPreferences));
 
-
+Log.d("amount", String.valueOf(getAmount()));
     }
 
     //disse to burde kanskje flyttes til datarepository? Usikker, funker slik de er nå da. Må teste de
