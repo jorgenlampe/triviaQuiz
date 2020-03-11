@@ -1,5 +1,6 @@
     package com.example.triviaquiz;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.preference.ListPreference;
@@ -10,6 +11,7 @@ import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -54,10 +56,10 @@ import java.util.Set;
                 SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
                 sharedPreferences.registerOnSharedPreferenceChangeListener(this);
 
-                if(getIntent()!= null){
+             /*   if(getIntent()!= null){
                     answers = new String[10];
                 }
-
+*/
                 loadAnswers();
 
                 dataViewModel.getmQuestions();
@@ -116,29 +118,12 @@ import java.util.Set;
 
                         if (count == 0) {
 
-                            getResult();
+
                             stopQuiz();
+                            getResult();
+
                         }
                             }
-/*
-                         Map<String, ?> answered = answers.getAll();
-
-                         String o = (String) answered.get("STRINGS");
-
-                         if (!o.contains("null")) {
-
-                             Intent intent = new Intent(getApplicationContext(), Result.class);
-
-                             intent.putExtra("answers", o);
-                             intent.putExtra("correctAnswers", (Serializable) getCorrectAnswers());
-                             startActivity(intent);
-*/
-                         //    stopQuiz();
-
-
-
-
-
 
                  });
             }
@@ -171,12 +156,28 @@ import java.util.Set;
 
             }
 
+            AlertDialog.Builder alert = new AlertDialog.Builder((this));
 
+            alert.setMessage("Your score: " + noOfCorrectAnswers);
+            alert.setTitle("Result");
+            alert.setCancelable(false);
+            alert.setPositiveButton("OK", null);
+            alert.create().show();
+
+            alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+
+
+/*
             Intent intent = new Intent(this, Result.class);
 
             intent.putExtra("result", String.valueOf(noOfCorrectAnswers));
             startActivity(intent);
-
+*/
         }
 
 
@@ -303,11 +304,13 @@ import java.util.Set;
 
         private void stopQuiz() {
 
+
             File file = getApplicationContext().getFileStreamPath("questions.json");
 
             if (file.exists()) {
                 file.delete();
             }
+
         }
 
 
