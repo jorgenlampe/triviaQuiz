@@ -43,6 +43,18 @@ import java.util.Set;
         private String[] answers;
         private String[] correctList;
 
+
+        public int getNoOfAnsweredQuestions(){
+
+            int notAnswered = 0;
+            for (int i = 0; i < answers.length; i++)
+                if (answers[i]==null)
+                    notAnswered++;
+
+            return answers.length - notAnswered;
+
+        }
+
         public int getAmount() {
 
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -150,9 +162,9 @@ Log.d("amount", String.valueOf(getAmount()));
 
 
             int noOfCorrectAnswers = 0;
-            for (int i = 0; i < getAmount(); i++) {
-                Log.d("getres", correctList[i]);
-                Log.d("getres2", answers[i]);
+            for (int i = 0; i < getNoOfAnsweredQuestions(); i++) {
+
+                Log.d("ppp", String.valueOf(answers.length));
                 if (answers[i].equals(correctList[i])) {
 
                     noOfCorrectAnswers++;
@@ -291,7 +303,7 @@ Log.d("amount", String.valueOf(getAmount()));
 
                 case R.id.stopBtn:
 
-                    stopQuiz();
+                    getResult();
 
                 return true;
 
