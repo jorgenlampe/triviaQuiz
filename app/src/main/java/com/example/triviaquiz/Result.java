@@ -40,10 +40,12 @@
         private void showResult() {
 
             TextView tv = findViewById(R.id.tvResult);
+            Intent intent = getIntent();
+
+            String result = intent.getStringExtra("result");
 
 
-
-            tv.setText("YOUR SCORE: " + getPoints()+ " POINTS");
+            tv.setText("YOUR SCORE: " + result + " POINTS");
 
         }
 
@@ -72,14 +74,24 @@ Log.d("endring", "nei");
             //         correctAnswers.add(q.getCorrect_answer());
 
 
-            public String getPoints() {
+         /*   public String getPoints() {
 
                 Intent intent = getIntent();
 
                 List<String> correctAnswers = (List<String>) intent.getSerializableExtra("correctAnswers");
                 String answers = intent.getStringExtra("answers");
 
+                Object[] arr = correctAnswers.toArray();
+
+
                 List<String> answersList = Arrays.asList(answers.split(","));
+
+                Object[] arr2 = answersList.toArray();
+
+                for (int i = 0; i < 10; i++)
+                    if (arr2[i].equals(arr[i]))
+                        Log.d("yyyy", "JADA");
+
 
                 int count = 0;
 
@@ -108,7 +120,8 @@ Log.d("endring", "nei");
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
         }
-/*
+*/
+         /*
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 

@@ -40,6 +40,7 @@ import java.util.Set;
         private RecyclerView.LayoutManager layoutManager;
         private String[] answers;
         private List<String> correctAnswers = new ArrayList<>();
+        private String[] correctList;
 
         public List<String> getCorrectAnswers() {
             return correctAnswers;
@@ -112,7 +113,10 @@ import java.util.Set;
 
                  for (Question q : questions) {
                      correctAnswers.add(q.getCorrect_answer());
+
                  }
+
+
 
                  mAdapter.setOnCheckedChangeListener(new QuestionAdapter.OnCheckedChangeListener() {
                      @Override
@@ -120,12 +124,20 @@ import java.util.Set;
                          answers[position] = answer;
                          saveAnswers();
 
+                         int count = 0;
+                        for (int i = 0; i < answers.length; i++)
+                            if (answers[i]==null) {
+                                count++;
 
-                         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                         SharedPreferences answers = getSharedPreferences(SAVED_ANSWERS, MODE_PRIVATE);
-               //          int amountInt = Integer.parseInt(sharedPreferences.getString("amount", "10"));
+                            }
 
+                        if (count == 0) {
 
+                            getResult();
+                            stopQuiz();
+                        }
+                            }
+/*
                          Map<String, ?> answered = answers.getAll();
 
                          String o = (String) answered.get("STRINGS");
@@ -137,15 +149,12 @@ import java.util.Set;
                              intent.putExtra("answers", o);
                              intent.putExtra("correctAnswers", (Serializable) getCorrectAnswers());
                              startActivity(intent);
+*/
+                         //    stopQuiz();
 
 
 
-                             stopQuiz();
 
-                         }
-
-
-                         }
 
 
                  });
@@ -165,7 +174,33 @@ import java.util.Set;
 
         }
 
-    public void startNewQuiz(){
+        private void getResult() {
+
+            correctList = new String[10];
+
+            int noOfCorrectAnswers = 0;
+
+            for (int i = 0; i < 10; i++) {
+                correctList[i] = correctAnswers.get(i);
+                Log.d("getres", correctList[i]);
+                Log.d("getres2", answers[i]);
+                if (answers[i].equals(correctList[i])) {
+
+                    noOfCorrectAnswers++;
+                }
+
+            }
+
+
+            Intent intent = new Intent(this, Result.class);
+
+            intent.putExtra("result", String.valueOf(noOfCorrectAnswers));
+            startActivity(intent);
+
+        }
+
+
+        public void startNewQuiz(){
 
 
         //slette noe fra sharedpreferences
