@@ -41,32 +41,26 @@ import java.util.Set;
         private QuestionAdapter mAdapter;
         private RecyclerView.LayoutManager layoutManager;
         private String[] answers;
-        private String[] correctList = new String[10];
+        private String[] correctList;
+        private int numberOfQuestions;
 
-        public int getAmount() {
-
-            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-            return Integer.parseInt(sharedPreferences.getString("amount", "10"));
-        }
 
         private static final String SAVED_ANSWERS = "SAVED";
         private static final String KEY = "STRINGS";
 
 
         @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        protected void onCreate(Bundle savedInstanceState) {
+                super.onCreate(savedInstanceState);
+                setContentView(R.layout.activity_main);
 
                 SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
                 sharedPreferences.registerOnSharedPreferenceChangeListener(this);
 
-             /*   if(getIntent()!= null){
-                    answers = new String[10];
-                }
-*/
                 loadAnswers();
-
+                numberOfQuestions = getNumberOfQuestions();
+                correctList = new String[numberOfQuestions];
+                answers = new String[numberOfQuestions];
                 dataViewModel.getmQuestions();
                 recyclerView = findViewById(R.id.my_recycler_view);
                 recyclerView.setHasFixedSize(true); //bedre ytelse med fast størrelse på layout
@@ -76,12 +70,15 @@ import java.util.Set;
                 subscribe();
                 dataViewModel.downloadQuestions(this, getUrl(sharedPreferences));
 
-Log.d("amount", String.valueOf(getAmount()));
     }
+        public int getNumberOfQuestions() {
 
-    //disse to burde kanskje flyttes til datarepository? Usikker, funker slik de er nå da. Må teste de
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+            return Integer.parseInt(sharedPreferences.getString("amount", "10"));
+        }
+
     private void saveAnswers() {
-        SharedPreferences sharedPreferences = getSharedPreferences(SAVED_ANSWERS, MODE_PRIVATE);  //Denne bruker getSharedPreferences(... , ...). Tilgjengelig fra alle aktiviteter.
+        SharedPreferences sharedPreferences = getSharedPreferences(SAVED_ANSWERS, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         Gson gson = new Gson();
         String json = gson.toJson(answers);
@@ -90,7 +87,7 @@ Log.d("amount", String.valueOf(getAmount()));
     }
 
     private void loadAnswers() {
-        SharedPreferences sharedPreferences = getSharedPreferences(SAVED_ANSWERS, MODE_PRIVATE);  //Denne bruker getSharedPreferences(... , ...). Tilgjengelig fra alle aktiviteter.
+        SharedPreferences sharedPreferences = getSharedPreferences(SAVED_ANSWERS, MODE_PRIVATE);
         Gson gson = new Gson();
         String json = sharedPreferences.getString(KEY, null);
         answers = gson.fromJson(json, String[].class);
@@ -103,9 +100,11 @@ Log.d("amount", String.valueOf(getAmount()));
          final Observer<List<Question>> questionsObserver = new Observer<List<Question>>() {
             @Override
             public void onChanged(final List<Question> questions) {
+                System.out.println(questions.size());
+                System.out.println(answers.length);
                  mAdapter = new QuestionAdapter(questions, answers);
                  recyclerView.setAdapter(mAdapter);
-                 for (int i = 0; i<10;i++) {
+                 for (int i = 0; i<correctList.length;i++) {
                     correctList[i] = questions.get(i).getCorrect_answer();
                      System.out.println(questions.get(i).getCorrect_answer());
                  }
@@ -151,7 +150,7 @@ Log.d("amount", String.valueOf(getAmount()));
 
 
             int noOfCorrectAnswers = 0;
-            for (int i = 0; i < 10; i++) {
+            for (int i = 0; i < answers.length; i++) {
                 Log.d("getres", correctList[i]);
                 Log.d("getres2", answers[i]);
                 if (answers[i].equals(correctList[i])) {
@@ -187,10 +186,10 @@ Log.d("amount", String.valueOf(getAmount()));
 
 
         public void startNewQuiz(){
-
-
         //slette noe fra sharedpreferences
-        answers = new String[10];
+            numberOfQuestions = getNumberOfQuestions();
+             answers = new String[numberOfQuestions];
+            correctList = new String[numberOfQuestions];
 
         stopQuiz();
 
