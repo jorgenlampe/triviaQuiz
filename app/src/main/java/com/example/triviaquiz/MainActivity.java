@@ -41,7 +41,7 @@ import java.util.Set;
         private QuestionAdapter mAdapter;
         private RecyclerView.LayoutManager layoutManager;
         private String[] answers;
-        private String[] correctList = new String[10];
+        private String[] correctList;
 
         public int getAmount() {
 
@@ -61,10 +61,7 @@ import java.util.Set;
                 SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
                 sharedPreferences.registerOnSharedPreferenceChangeListener(this);
 
-             /*   if(getIntent()!= null){
-                    answers = new String[10];
-                }
-*/
+
                 loadAnswers();
 
                 dataViewModel.getmQuestions();
@@ -96,16 +93,18 @@ Log.d("amount", String.valueOf(getAmount()));
         answers = gson.fromJson(json, String[].class);
         System.out.println(json);
         if(json == null) {
-            answers = new String[10];
+            answers = new String[getAmount()];
         }
     }
     private void subscribe() {
          final Observer<List<Question>> questionsObserver = new Observer<List<Question>>() {
             @Override
             public void onChanged(final List<Question> questions) {
+                 correctList = new String[getAmount()];
+                Log.d("lengde", String.valueOf(correctList.length));
                  mAdapter = new QuestionAdapter(questions, answers);
                  recyclerView.setAdapter(mAdapter);
-                 for (int i = 0; i<10;i++) {
+                 for (int i = 0; i<getAmount();i++) {
                     correctList[i] = questions.get(i).getCorrect_answer();
                      System.out.println(questions.get(i).getCorrect_answer());
                  }
@@ -151,7 +150,7 @@ Log.d("amount", String.valueOf(getAmount()));
 
 
             int noOfCorrectAnswers = 0;
-            for (int i = 0; i < 10; i++) {
+            for (int i = 0; i < getAmount(); i++) {
                 Log.d("getres", correctList[i]);
                 Log.d("getres2", answers[i]);
                 if (answers[i].equals(correctList[i])) {
@@ -190,7 +189,7 @@ Log.d("amount", String.valueOf(getAmount()));
 
 
         //slette noe fra sharedpreferences
-        answers = new String[10];
+        answers = new String[getAmount()];
 
         stopQuiz();
 
