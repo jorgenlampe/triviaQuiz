@@ -151,18 +151,15 @@ import java.util.Set;
         }
 
         private void getResult() {
-
-
             int noOfCorrectAnswers = 0;
-            for (int i = 0; i < answers.length; i++) {
-                Log.d("getres", correctList[i]);
-                Log.d("getres2", answers[i]);
-                if (answers[i].equals(correctList[i])) {
-
-                    noOfCorrectAnswers++;
+            if(correctList.length != 0) {
+                for (int i = 0; i < answers.length; i++) {
+                    if (answers[i].equals(correctList[i])) {
+                        noOfCorrectAnswers++;
+                    }
                 }
-
             }
+
 
             AlertDialog.Builder alert = new AlertDialog.Builder((this));
 
@@ -294,13 +291,10 @@ import java.util.Set;
 
 
                 case R.id.stopBtn:
-
                     getResult();
-
-                return true;
+                    return true;
 
                 case R.id.newQuizBtn:
-
                     startNewQuiz();
 
             }
