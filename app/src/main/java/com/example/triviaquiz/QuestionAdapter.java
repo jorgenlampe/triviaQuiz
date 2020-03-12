@@ -37,10 +37,9 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.MyView
         public QuestionView questionView;
 
 
-        public MyViewHolder(QuestionView v, final OnCheckedChangeListener listener, String[] answersChosen) {
+        public MyViewHolder(QuestionView v, final OnCheckedChangeListener listener) {
             super(v);
             questionView = v;
-            String answerChosen = null;
             RadioGroup rGroup = v.findViewById(R.id.radioGroup);
 
             rGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -71,7 +70,7 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.MyView
                                                      int viewType) {
         // create a new view
         QuestionView questionView = new QuestionView(parent.getContext());
-        MyViewHolder vh = new MyViewHolder(questionView, mListener, answersChosen);
+        MyViewHolder vh = new MyViewHolder(questionView, mListener);
         return vh;
     }
 

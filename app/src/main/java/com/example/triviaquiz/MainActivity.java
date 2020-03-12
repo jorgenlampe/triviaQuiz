@@ -55,9 +55,10 @@ import java.util.Set;
 
                 SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
                 sharedPreferences.registerOnSharedPreferenceChangeListener(this);
-
+                numberOfQuestions = getNumberOfQuestions();
                 answers = new String[numberOfQuestions];
                 correctList = new String[numberOfQuestions];
+                System.out.println(numberOfQuestions);
                 loadAnswers();
 
                 dataViewModel.getmQuestions();
@@ -72,16 +73,6 @@ import java.util.Set;
     }
 
 
-        public int getNoOfAnsweredQuestions(){
-
-            int notAnswered = 0;
-            for (int i = 0; i < answers.length; i++)
-                if (answers[i]==null)
-                    notAnswered++;
-
-            return answers.length - notAnswered;
-
-        }
         public int getNumberOfQuestions() {
 
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -102,8 +93,8 @@ import java.util.Set;
         Gson gson = new Gson();
         String json = sharedPreferences.getString(KEY, null);
         answers = gson.fromJson(json, String[].class);
-        System.out.println(json);
-        if(json == null) {
+        System.out.println(answers.length + " loadanswers");
+        if(json == null || answers.length != correctList.length) {
             answers = new String[numberOfQuestions];
         }
     }
@@ -152,13 +143,15 @@ import java.util.Set;
 
         private void getResult() {
             int noOfCorrectAnswers = 0;
-            if(correctList.length != 0) {
-                for (int i = 0; i < answers.length; i++) {
-                    if (answers[i].equals(correctList[i])) {
+            System.out.println(correctList.length + "correctlist");
+            System.out.println(answers.length + "answers");
+
+            for (int i = 0; i < numberOfQuestions; i++) {
+                    if (correctList[i].equals(answers[i])) {
                         noOfCorrectAnswers++;
                     }
                 }
-            }
+
 
 
             AlertDialog.Builder alert = new AlertDialog.Builder((this));
